@@ -1,0 +1,10 @@
+curl -X POST -H "Authorization: Bearer 5Xv6-0cw1iKiu-9cc8ok3IT41AXA4xSHOp2csJFE3D3BFkffecUOr_5p1N7o07Y1euz7m6XX_RIjSjkYfo_3m1ezDDb1NkfM8Jm4XcAgJTTRADLSqUHoL7IOTnq9W3Yx" -H "Content-Type: application/graphql" https://api.yelp.com/v3/graphql --data '
+{
+    business(id: "garaje-san-francisco") {
+        name
+        id
+        alias
+        rating
+        url
+    }
+}'
