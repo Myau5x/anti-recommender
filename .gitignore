@@ -1,4 +1,6 @@
 api.txt
+/yelp_dataset
+yelp_dataset.tar
 .pyc
 __pycache__
 .ipynb_checkpoints
@@ -11,4 +13,5 @@ metastore_db
 *.rar
 *.tar
 *.zip
-
+.DS_Store
+derby.log
