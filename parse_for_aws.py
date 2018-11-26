@@ -25,34 +25,43 @@ def scrap_by_users(user_url):
     response = requests.get(user_url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-        count_rev = int(soup.select_one('li.review-count').select_one('strong').text)
-        revs = []
-        time.sleep(1)
-        if count_rev > 0:
+        count_li  = soup.select_one('li.review-count')
+        if count_li is None:
+            return None
+        else:
+
+            count_stro = count_li.select_one('strong')
+            if count_stro is None:
+                return None
+            else:
+                count_rev = int(count_stro.text)
+                revs = []
+                time.sleep(5)
+                if count_rev > 0 :
 
 
-            raw_reviews = soup.select('div.review')
-    ### check that reviews > 0
-            for row in raw_reviews:
-                rev = parse_review(row)
-                rev['user_id'] = user_id
-                revs.append(rev)
+                    raw_reviews = soup.select('div.review')
+            ### check that reviews > 0
+                    for row in raw_reviews:
+                        rev = parse_review(row)
+                        rev['user_id'] = user_id
+                        revs.append(rev)
 
-        for page in range(10, count_rev, 10):
-            url_add = add_start+str(page)+'&userid='+user_id
-            response = requests.get(url_add)
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.content, 'html.parser')
+                for page in range(10, count_rev, 10):
+                    url_add = add_start+str(page)+'&userid='+user_id
+                    response = requests.get(url_add)
+                    if response.status_code == 200:
+                        soup = BeautifulSoup(response.content, 'html.parser')
 
-                raw_reviews = soup.select('div.review')
-                if raw_reviews is None:
-                    break
-                for row in raw_reviews:
-                    rev = parse_review(row)
-                    rev['user_id'] = user_id
-                    revs.append(rev)
-            time.sleep(1)
-        return(revs)
+                        raw_reviews = soup.select('div.review')
+                        if raw_reviews is None:
+                            break
+                        for row in raw_reviews:
+                            rev = parse_review(row)
+                            rev['user_id'] = user_id
+                            revs.append(rev)
+                    time.sleep(5)
+                return(revs)
 
     else:
         return None
@@ -67,6 +76,6 @@ def scrap_to_f(users_urls):
                 json.dump(revs, outfile)
 
 if __name__ == '__main__':
-    file = 'th1_pr_urls.csv'
+    file = open('th1_pr_urls.csv')
     ll = list(map(lambda x: x.strip(), file.readlines()))
     scrap_to_f(ll)
