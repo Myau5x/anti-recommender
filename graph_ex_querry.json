@@ -1,0 +1,27 @@
+{
+  search(term:"tablas",
+         location:"98012") {
+    total
+    business {
+      name
+      alias
+      id
+      rating
+      location {
+        formatted_address
+      }
+      attributes
+      price
+      reviews {
+        text
+        rating
+        time_created
+        id
+        user{
+          id
+          profile_url
+        }
+      }
+    }
+  }
+}
