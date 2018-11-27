@@ -11,7 +11,10 @@ spark = (ps.sql.SparkSession.builder
 sc = spark.sparkContext
 
 def str_to_l(text):
-    return [word.strip() for word in text.split(',') ]
+    if text is None:
+        return []
+    else:
+        return [word.strip() for word in text.split(',') ]
 
 def if_restaurant(text):
     if text is None:
