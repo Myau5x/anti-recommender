@@ -33,7 +33,7 @@ root
  |    |-- RestaurantsCounterService: string (nullable = true)
  |    |-- RestaurantsDelivery: string (nullable = true)
  |    |-- RestaurantsGoodForGroups: string (nullable = true)
- |    |-- RestaurantsPriceRange2: string (nullable = true)
+ |    |-- RestaurantsPriceRange2: string (nullable = true)   ///The only attribute that i have
  |    |-- RestaurantsReservations: string (nullable = true)
  |    |-- RestaurantsTableService: string (nullable = true)
  |    |-- RestaurantsTakeOut: string (nullable = true)
