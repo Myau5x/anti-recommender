@@ -1,0 +1,10 @@
+root
+ |-- business_id: string (nullable = true)
+ |-- cool: long (nullable = true)
+ |-- date: string (nullable = true)
+ |-- funny: long (nullable = true)
+ |-- review_id: string (nullable = true)
+ |-- stars: long (nullable = true)
+ |-- text: string (nullable = true)
+ |-- useful: long (nullable = true)
+ |-- user_id: string (nullable = true)
