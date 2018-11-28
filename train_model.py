@@ -31,6 +31,7 @@ def if_restaurant(text):
 
 if_rest_udf = udf(if_restaurant, BooleanType())
 str_to_list_udf = udf(str_to_l, ArrayType(StringType()))
+hash_udf = udf(lambda x: hash(x), IntegerType())
 
 def filter_rev_by_rest(rev, biz):
     rests = biz.filter(if_rest_udf(biz.categories))
@@ -49,14 +50,14 @@ def look_how_dence_rating_matrix(rev, m):
 
 def construct_set_for_ALS(rating, m):
     u_id = rating.select('user_id').groupBy('user_id').count().selectExpr('user_id', 'count AS user_count')
-    u_df = u_id.toPandas()
-    u_df['user_num'] = u_df.index
-    b_df = rating.select('business_id').groupBy('business_id').count().toPandas()
-    b_df['biz_num'] = b_df.index
-    user_id = spark.createDataFrame(u_df)
-    b_id = spark.createDataFrame(b_df)
-    r1 = user_id.filter(user_id.user_count > m).join(rating, 'user_id')
-    r2 = r1.join(r1,'business_id' )
+#    u_df = u_id.toPandas()
+#    u_df['user_num'] = u_df.index
+#    b_df = rating.select('business_id').groupBy('business_id').count().toPandas()
+#    b_df['biz_num'] = b_df.index
+#    user_id = spark.createDataFrame(u_df)
+#    b_id = spark.createDataFrame(b_df)
+    r1 = rating.join(u_id, 'user_id')
+    r2 = r1.filter(r1.user_count > m)
     return r2
 
 
