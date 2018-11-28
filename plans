@@ -12,4 +12,9 @@ Create strategy for users
 
   create dataFrame with user features
 
-  
+  check that all works?
+
+  create dataFrame to test users
+
+
+train on all train set and save dataframes
