@@ -1,0 +1,15 @@
+Check how biz cold start works
+
+Create good user DataFrame
+
+
+Create strategy for users
+
+  look all bad reviews,
+  look all good reviews
+
+  count this words //not amful, and so on in my good users
+
+  create dataFrame with user features
+
+  

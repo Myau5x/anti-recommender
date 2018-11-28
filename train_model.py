@@ -16,6 +16,20 @@ sc = spark.sparkContext
 
 #user = spark.read.json('yelp_dataset/yelp_academic_dataset_user.json')
 
+def normalize_pred(x):
+    if x > 5:
+        return 5
+    elif x <1:
+        return 1
+    else:
+        return x
+
+norm_pred_udf = udf(normalize_pred, DoubleType())
+
+def my_metric(df, predCol, actCol):
+    n = df.count()
+    sum = df.sum()
+    pass
 
 def str_to_l(text):
     if text is None:
@@ -59,7 +73,6 @@ def construct_set_for_ALS(rating, m):
     r1 = rating.join(u_id, 'user_id')
     r2 = r1.filter(r1.user_count > m)
     return r2
-
 
 
 if __name__ == '__main__':
