@@ -56,7 +56,7 @@ def construct_set_for_ALS(rating, m):
     user_id = spark.createDataFrame(u_df)
     b_id = spark.createDataFrame(b_df)
     r1 = user_id.filter(user_id.user_count > m).join(rating, 'user_id')
-    r2 = r1.join(b_df,'business_id' )
+    r2 = r1.join(r1,'business_id' )
     return r2
 
 
