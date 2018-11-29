@@ -60,6 +60,8 @@ def add_to_database_if_new(row, collection):
     if collection.count_documents({'id': row['id']}) == 0:
         collection.insert_one(row)
 
+
+
 def retrieve_datatable(collection):
     """Return the contents of MongoDB collection as a dataframe."""
     return pd.DataFrame(list(collection.find({})))
