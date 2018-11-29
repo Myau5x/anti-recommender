@@ -1,29 +1,31 @@
 import pandas as pd
 import numpy as np
-
-look = pd.read_csv('whats_wrong/model2_t.csv')
-
-act = look.stars
-base = look.mean_rating
-pred = look.prediction
-pred[pred>5] = 5
-pred[pred<1] = 1
+import matplotlib.pyplot as plt
+from sklearn.metrics import auc, roc_auc_score, roc_curve
 
 
 def accu(act, pred, thres):
-    return ((act >thres) == (pred >thres)).mean()
-
-thres = np.linspace(1,5,9)
-a_base = np.zeros(9)
-a_pred = np.zeros(9)
-fig, ax = plt.subplots()
-
-for i  in range(9):
-    a_base[i] = accu(act, base, thres[i])
-    a_pred[i] = accu(act, pred, thres[i])
-ax.plot(thres, a_base, color = 'r')
-ax.plot(thres, a_pred, color = 'b')
+    return ((act <thres) == (pred <thres)).mean()
 
 
-pred[act <3.5].mean(), base[act<3.5].mean()
+def rating_to_prob(rating):
+    '''convert rating to probability that it is bad rest'''
+    """
+    1 --- 1
+    2 --- .9
+    3 --- .8
+    4 --- .2
+    5 --- 0
+
+    """
+    prob = np.zeros(len(rating))
+    prob[rating >= 5] = 0
+    prob[rating <1] = 1
+    prob[(rating<5)&(rating>=4)] = (5- rating[(rating<5)&(rating>=4)])*0.2
+    prob[(rating<4)&(rating>=3)] = (4- rating[(rating<4)&(rating>=3)])*0.6 + 0.2
+    prob[(rating<3)&(rating>=2)] = (3- rating[(rating<3)&(rating>=2)])*0.1 + 0.8
+    prob[(rating<2)&(rating>=1)] = (2- rating[(rating<2)&(rating>=1)])*0.1 + 0.9
+    return prob
+
+#pred[act <3.5].mean(), base[act<3.5].mean()
 ###(3.1792809133547317, 3.4462038511106057)

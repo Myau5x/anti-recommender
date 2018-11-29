@@ -1,15 +1,13 @@
 import pandas as pd
 import numpy as np
 
-def expand_features(X, col='features', inplace=False, sep=None):
+def expand_factors(X, col='features', inplace=False):
     X = X.copy() if not inplace else X
-    if sep==None:
-        for i in range(len(X[col].iloc[0])):
-            X['feature_' + str(i)] = X[col].apply(lambda x: x[i])
-    else:
-        lbls = np.unique(sep.join(X[col].unique()).split(sep))
-        for lbl in lbls:
-            X[lbl] = X[col].apply(lambda x: lbl in x)
+    X[col] = X[col].map(lambda x: x[1:-1]).str.split(',')
+
+    for i in range(len(X[col].iloc[0])):
+        X['feature_' + str(i)] = X[col].apply(lambda x: float(x[i]))
+
     X.drop(col, axis=1, inplace=True)
     return X
 
@@ -25,8 +23,16 @@ def similar_rest(r1, r2):
     sp = similar_price_range(p1,p2)
     return sc+sr+sr_c+sp
 
-def find_k_similar(train, row, k=90):
+def find_k_similar(train, row, k=98.5, rank = 6):
     x = train.apply(similar_rest, axis = 1,r2= row)
+    feat_c = train.columns[-rank:]
+
+    return train[feat_c][(x >np.percentile(x, k))].mean(axis = 0)
+
+def features_for_new(X, train, rank = 6):
+    X_f = pd.dataFrame()
+    X_f[feat_c] = train.columns[-rank:]
+    pass
 
 
 def similar_cat(c1,c2):
