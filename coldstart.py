@@ -17,13 +17,17 @@ def similar_rest(r1, r2):
     ''' calculate similarity beetween 2 Restaurants
         based on category, price_range , mean_review
     '''
-    sc =  similar_cat(r1['categories'], r2['categories'])
+    sc =  2*similar_cat(r1['categories'], r2['categories'])
     sr = similar_review(r1['stars'], r2['stars'])
     sr_c = similar_review_count(r1['rat_to_rev'], r2['rat_to_rev'])
     p1 = r1['RestaurantsPriceRange2']
     p2 = r2['RestaurantsPriceRange2']
     sp = similar_price_range(p1,p2)
     return sc+sr+sr_c+sp
+
+def find_k_similar(train, row, k=90):
+    x = train.apply(similar_rest, axis = 1,r2= row)
+
 
 def similar_cat(c1,c2):
     set1 = set(c1)
