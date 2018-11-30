@@ -18,6 +18,7 @@ from nltk.stem.porter import PorterStemmer
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import CountVectorizer, IDF
 from pyspark.sql.functions import udf
+from pyspark.sql.types import ArrayType, StringType, BooleanType
 
 PUNCTUATION = set(string.punctuation)
 STOPWORDS = set(stopwords.words('english'))
@@ -51,7 +52,7 @@ class preparation():
         self.inputCol = inputCol
         self.outputCol = outputCol
 
-    def tokenize(self, textCol = 'text', dataset):
+    def tokenize(self, dataset, textCol = 'text'):
         '''can tokenize'''
         return dataset.withColumn('token', udf_tokenize('text'))
 
@@ -68,3 +69,15 @@ class preparation():
     def transform(self, dataset):
 
         return self.m_tfidf.transform(dataset)
+
+def kmean_counts(sample, k = 2, minDF=10, vocabSize=5000,
+    inputCol='token', outputCol='vectors'):
+    cv = CountVectorizer(minDF=minDF, vocabSize=vocabSize,
+        inputCol='token', outputCol='vectors')
+    model = cv.fit(sample)
+    sample_vect = model.transform(sample)
+    sample_vect.cache()
+
+    km = KMeans(k = k, featuresCol='vectors', maxIter= 30)
+    model_km = km.fit(sample_vect)
+    return model_km
