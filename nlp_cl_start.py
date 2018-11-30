@@ -69,15 +69,3 @@ class preparation():
     def transform(self, dataset):
 
         return self.m_tfidf.transform(dataset)
-
-def kmean_counts(sample, k = 2, minDF=10, vocabSize=5000,
-    inputCol='token', outputCol='vectors'):
-    cv = CountVectorizer(minDF=minDF, vocabSize=vocabSize,
-        inputCol='token', outputCol='vectors')
-    model = cv.fit(sample)
-    sample_vect = model.transform(sample)
-    sample_vect.cache()
-
-    km = KMeans(k = k, featuresCol='vectors', maxIter= 30)
-    model_km = km.fit(sample_vect)
-    return model_km

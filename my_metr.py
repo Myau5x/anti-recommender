@@ -27,5 +27,13 @@ def rating_to_prob(rating):
     prob[(rating<2)&(rating>=1)] = (2- rating[(rating<2)&(rating>=1)])*0.1 + 0.9
     return prob
 
-#pred[act <3.5].mean(), base[act<3.5].mean()
-###(3.1792809133547317, 3.4462038511106057)
+def transform_to_score(data):
+    test_df = data.copy()
+    test_df['similar']  = (test_df.user_cl == test_df.biz_cl)
+    test_gr_df =  test_df.groupby('review_id').agg({'similar':'sum', 'stars':'mean', 'rating':'mean'})
+    test_gr_df['pred'] = (test_gr_df.similar > 0)
+    test_gr_df['act'] = (test_gr_df.stars < 3)
+    test_gr_df['base'] = (test_gr_df.rating < 3)
+    test_gr_df['base_3.5'] = (test_gr_df.rating < 3.5)
+
+    return test_gr_df
