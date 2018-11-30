@@ -48,7 +48,9 @@ str_to_list_udf = udf(str_to_l, ArrayType(StringType()))
 hash_udf = udf(lambda x: hash(x), IntegerType())
 
 def filter_rev_by_rest(rev, biz):
+    '''ssss'''
     rests = biz.filter(if_rest_udf(biz.categories))
+    pass
 
 def look_how_dence_rating_matrix(rev, m):
     rating = rev.select('user_id', 'business_id', 'stars')
