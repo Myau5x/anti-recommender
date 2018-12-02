@@ -52,4 +52,4 @@ def if_restaurant(text):
 if_rest_udf = udf(if_restaurant, BooleanType())
 
 def data_tokenizer(dataset, colText = 'text', colToken = 'token'):
-    return dataset.withColumn('token', udf_tokenize('text'))
+    return dataset.withColumn(colToken, udf_tokenize(colText))

@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import auc, roc_auc_score, roc_curve
+from sklearn.metrics import auc, roc_auc_score, roc_curve, accuracy_score,  recall_score
 
 
 def accu(act, pred, thres):
@@ -37,3 +37,14 @@ def transform_to_score(data):
     test_gr_df['base_3.5'] = (test_gr_df.rating < 3.5)
 
     return test_gr_df
+
+def my_scorer(data, colTrue ='act', colPred = 'pred', colBase = 'base' , colBase35 = 'base_3.5'):
+    acc ={}
+    acc[colPred]  = accuracy_score(data[colTrue], data[colPred])
+    acc[colBase] = accuracy_score(data[colTrue], data[colBase])
+    acc[colBase35] = accuracy_score(data[colTrue], data[colBase35])
+    recall = {}
+    recall[colPred]  = recall_score(data[colTrue], data[colPred])
+    recall[colBase] = recall_score(data[colTrue], data[colBase])
+    recall[colBase35] = recall_score(data[colTrue], data[colBase35])
+    return pd.DataFrame([acc, recall], index = ['accuracy', 'recall'])
