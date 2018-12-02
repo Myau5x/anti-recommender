@@ -43,29 +43,13 @@ udf_tokenize = udf(f=tokenize, returnType=ArrayType(StringType()))
 #bad_sample = bad_sample.withColumn('token', udf_tokenize('text'))
 #cv = CountVectorizer(minDF=10, vocabSize=5000, inputCol='token', outputCol='vectors')
 
-class preparation():
+def if_restaurant(text):
+    if text is None:
+        return False
+    else:
+        return 'Restaurants' in text
 
-    def __init__(self, minDF=10, vocabSize=5000, inputCol='token', outputCol='features'   ):
-        self.udf_tokenize = udf_tokenize
-        self.minDF = minDF
-        self.vocabSize = vocabSize
-        self.inputCol = inputCol
-        self.outputCol = outputCol
+if_rest_udf = udf(if_restaurant, BooleanType())
 
-    def tokenize(self, dataset, textCol = 'text'):
-        '''can tokenize'''
-        return dataset.withColumn('token', udf_tokenize('text'))
-
-    def fit(self, dataset):
-        cv = CountVectorizer(minDF = self.minDF, vocabSize = self.vocabSize,
-         inputCol = self.inputCol, outputCol = 'vectors')
-        self.m_cv = cv.fit(dataset)
-        idf = IDF(inputCol= 'vectors', outputCol= 'features')
-        medium = self.m_cv.transform(dataset)
-        medium.cache()
-        self.m_tfidf = idf.fit(medium)
-        return self.m_tfidf
-
-    def transform(self, dataset):
-
-        return self.m_tfidf.transform(dataset)
+def data_tokenizer(dataset, colText = 'text', colToken = 'token'):
+    return dataset.withColumn('token', udf_tokenize('text'))
