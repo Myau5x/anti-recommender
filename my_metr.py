@@ -38,13 +38,31 @@ def transform_to_score(data):
 
     return test_gr_df
 
+def transform_aggregated(data):
+
+    test_gr_df =  data.copy()
+    test_gr_df['pred'] = (test_gr_df['sum(similar)'] > 0)
+    
+    test_gr_df['act'] = (test_gr_df['avg(stars)'] < 3)
+    test_gr_df['base'] = (test_gr_df['avg(rating)'] < 3)
+    test_gr_df['base_3.5'] = (test_gr_df['avg(rating)'] < 3.5)
+
+    return test_gr_df
+
+
+
 def my_scorer(data, colTrue ='act', colPred = 'pred', colBase = 'base' , colBase35 = 'base_3.5'):
     acc ={}
     acc[colPred]  = accuracy_score(data[colTrue], data[colPred])
     acc[colBase] = accuracy_score(data[colTrue], data[colBase])
     acc[colBase35] = accuracy_score(data[colTrue], data[colBase35])
+    acc['combo_base'] = accuracy_score(data[colTrue], data[colBase]|data[colPred])
+    acc['combo_35'] = accuracy_score(data[colTrue], data[colBase35]|data[colPred])
     recall = {}
     recall[colPred]  = recall_score(data[colTrue], data[colPred])
     recall[colBase] = recall_score(data[colTrue], data[colBase])
     recall[colBase35] = recall_score(data[colTrue], data[colBase35])
+    recall['combo_base'] = recall_score(data[colTrue], data[colBase]|data[colPred])
+    recall['combo_35'] = recall_score(data[colTrue], data[colBase35]|data[colPred])
+
     return pd.DataFrame([acc, recall], index = ['accuracy', 'recall'])
