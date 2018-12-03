@@ -31,38 +31,13 @@ sc = spark.sparkContext
 seed = 91
 
 ##load dataset
-biz = spark.read.json('yelp_dataset/yelp_academic_dataset_business.json')
-rev = spark.read.json('yelp_dataset/yelp_academic_dataset_review.json')
 
-rests = biz.filter(if_rest_udf(biz.categories))
 
-rest_rev = rev.join(rests.select('business_id','stars').withColumnRenamed('stars','rating'),'business_id')
-bad_reviews = rest_rev.filter('stars < 3')
+def create_test_set(both, pipe_model, rest_rev):
 
-bad_sample = bad_reviews.sample(False, 0.127, seed =seed)
 
-bad_sample.cache()
-sample_token= data_tokenizer(bad_sample)
-
-splits = sample_token.randomSplit([0.8, 0.1, 0.1], seed = 91)
-train = splits[0]
-add_cl = splits[1]
-test = splits[2]
-
-params_kcv = {'minDF' : 10, 'vocabSize':5000, 'k':15}
-
-cv = CountVectorizer(minDF=params_kcv['minDF'],
-    vocabSize=params_kcv['vocabSize'], inputCol='token', outputCol='vectors')
-km1 = KMeans(k = params_kcv['vocabSize'], featuresCol='vectors', maxIter= 30)
-pipe_count = Pipeline(stages=[cv, km1])
-
-def create_test_set(train, add_cl, pipe):
-
-    both = train.union(add_cl)
-
-    pipe_model = pipe.fit(train)
-    user_with_cl = cluster_user_by_review(both, pipe_cv_model)
-    biz_with_cl = cluster_biz_by_review(both, pipe_cv_model)
+    user_with_cl = cluster_user_by_review(both, pipe_model)
+    biz_with_cl = cluster_biz_by_review(both, pipe_model)
     train_rev_id =both.select('review_id')
 
     known_rev2 = user_with_cl.join(rest_rev.select('business_id',
@@ -79,6 +54,45 @@ def create_test_set(train, add_cl, pipe):
     return new_grf
 
 
-new_grf = create_test_set(train, add_cl, pipe)
+if __name__ == '__main__':
+    biz = spark.read.json('yelp_dataset/yelp_academic_dataset_business.json')
+    rev = spark.read.json('yelp_dataset/yelp_academic_dataset_review.json')
 
-results = my_scorer(new_grf)
+    rests = biz.filter(if_rest_udf(biz.categories))
+
+    rest_rev = rev.join(rests.select('business_id','stars').withColumnRenamed('stars','rating'),'business_id')
+    bad_reviews = rest_rev.filter('stars < 3')
+
+    bad_sample = bad_reviews.sample(False, 0.127, seed =seed)
+
+    bad_sample.cache()
+    sample_token= data_tokenizer(bad_sample)
+
+    splits = sample_token.randomSplit([0.8, 0.1, 0.1], seed = seed)
+    train = splits[0]
+    add_cl = splits[1]
+    test = splits[2]
+
+    params_kcv = {'minDF' : 10, 'vocabSize':5000, 'k':15}
+
+    cv = CountVectorizer(minDF=params_kcv['minDF'],
+        vocabSize=params_kcv['vocabSize'], inputCol='token', outputCol='vectors')
+    km1 = KMeans(k = params_kcv['vocabSize'], featuresCol='vectors', maxIter= 30)
+    pipe_count = Pipeline(stages=[cv, km1])
+
+    idf = IDF(inputCol="vector", outputCol="features")
+    km2 = KMeans(k = 20, featuresCol='features', maxIter= 30)
+    pipe_idf = Pipeline(stages = [cv, idf, km2])
+
+    both = train.union(add_cl)
+
+    count_model = pipe_count.fit(train)
+
+    new_grf = create_test_set(both, count_model, rest_rev)
+
+    results = my_scorer(new_grf)
+
+    idf_model = pipe_idf.fit(train)
+
+    new_gr_idf = create_test_set(both, idf_model, rest_rev)
+    results_idf = my_scorer(new_gr_idf)

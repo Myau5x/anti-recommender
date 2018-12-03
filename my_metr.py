@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import auc, roc_auc_score, roc_curve, accuracy_score,  recall_score
+from sklearn.metrics import auc, roc_auc_score, roc_curve, accuracy_score,  recall_score, precision_score
 
 
 def accu(act, pred, thres):
@@ -42,7 +42,7 @@ def transform_aggregated(data):
 
     test_gr_df =  data.copy()
     test_gr_df['pred'] = (test_gr_df['sum(similar)'] > 0)
-    
+
     test_gr_df['act'] = (test_gr_df['avg(stars)'] < 3)
     test_gr_df['base'] = (test_gr_df['avg(rating)'] < 3)
     test_gr_df['base_3.5'] = (test_gr_df['avg(rating)'] < 3.5)
@@ -64,5 +64,13 @@ def my_scorer(data, colTrue ='act', colPred = 'pred', colBase = 'base' , colBase
     recall[colBase35] = recall_score(data[colTrue], data[colBase35])
     recall['combo_base'] = recall_score(data[colTrue], data[colBase]|data[colPred])
     recall['combo_35'] = recall_score(data[colTrue], data[colBase35]|data[colPred])
+    prec ={}
+    prec[colPred]  = precision_score(data[colTrue], data[colPred])
+    prec[colBase] = precision_score(data[colTrue], data[colBase])
+    prec[colBase35] = precision_score(data[colTrue], data[colBase35])
+    prec['combo_base'] = precision_score(data[colTrue], data[colBase]|data[colPred])
+    prec['combo_35'] = precision_score(data[colTrue], data[colBase35]|data[colPred])
 
-    return pd.DataFrame([acc, recall], index = ['accuracy', 'recall'])
+
+
+    return pd.DataFrame([acc, recall, prec], index = ['accuracy', 'recall', 'prec'])
