@@ -28,6 +28,7 @@ def rating_to_prob(rating):
     return prob
 
 def transform_to_score(data):
+    """ transform review """
     test_df = data.copy()
     test_df['similar']  = (test_df.user_cl == test_df.biz_cl)
     test_gr_df =  test_df.groupby('review_id').agg({'similar':'sum', 'stars':'mean', 'rating':'mean'})
@@ -39,7 +40,7 @@ def transform_to_score(data):
     return test_gr_df
 
 def transform_aggregated(data):
-
+    """Transform aggregated data to dataFrame thats easy to calculate score"""
     test_gr_df =  data.copy()
     test_gr_df['pred'] = (test_gr_df['sum(similar)'] > 0)
 
@@ -74,3 +75,8 @@ def my_scorer(data, colTrue ='act', colPred = 'pred', colBase = 'base' , colBase
 
 
     return pd.DataFrame([acc, recall, prec], index = ['accuracy', 'recall', 'prec'])
+
+
+def plot_roc_curve(y_true, X, model, ax, label):
+    fpr, tpr, thr = roc_curve(y_true, model.predict_proba(X)[:,1])
+    ax.plot(fpr, tpr, label = label)
