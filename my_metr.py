@@ -78,5 +78,6 @@ def my_scorer(data, colTrue ='act', colPred = 'pred', colBase = 'base' , colBase
 
 
 def plot_roc_curve(y_true, X, model, ax, label):
+    """Plot roc curve, y_true & model.predict_proba(X), ax --- axes of subplot"""
     fpr, tpr, thr = roc_curve(y_true, model.predict_proba(X)[:,1])
     ax.plot(fpr, tpr, label = label)
