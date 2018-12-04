@@ -81,3 +81,10 @@ def plot_roc_curve(y_true, X, model, ax, label):
     """Plot roc curve, y_true & model.predict_proba(X), ax --- axes of subplot"""
     fpr, tpr, thr = roc_curve(y_true, model.predict_proba(X)[:,1])
     ax.plot(fpr, tpr, label = label)
+
+def calc_thres(y_true, X, model,  thres = 0.7,label = ''):
+    """Plot roc curve, y_true & model.predict_proba(X), ax --- axes of subplot"""
+    fpr, tpr, thr = roc_curve(y_true, model.predict_proba(X)[:,1])
+    idx = np.abs(tpr - thres).argmin()
+    #print(label, ':  ', col,' ', tpr[idx], ' ', fpr[idx], ' ', thr[idx])
+    return thr[idx]

@@ -10,7 +10,18 @@ class FillPrice:
         X['rest_isna'] = pd.isnull(X[priceCol])
         X[priceCol][pd.isnull(X[priceCol])] = 2
         return X
+class FillPriceScr:
+    def __init__(self, priceCol = 'price'):
+        self.priceCol = priceCol
+        self.priceModelCol = 'RestaurantsPriceRange2'
+    def transform(self, X, inplace = False):
+        X = X.copy() if not inplace else X
+        X['rest_isna'] = pd.isnull(X[self.priceCol])
+        X[self.priceCol][pd.isnull(X[self.priceCol])] = '$$'
+        X[self.priceCol] = X[self.priceCol].map(lambda x: len(x))
+        X.rename({self.priceCol: self.priceModelCol}, axis='columns', inplace = True)
 
+        return X
 
 class CategoriesExpand:
     """transform categories to dummy variables"""
@@ -54,8 +65,10 @@ class RatingNormalizer:
     def transform(self, X, inplace = False):
         X = X.copy() if not inplace else X
         rev_norm = X[self.revCol].map(lambda x: x if x < self.n else self.n)
-        X['st_over_am'] = X[self.starCol]/rev_norm
+        X['st_over_am'] = X[self.starCol]/(rev_norm+0.001)
+        X.rename({self.starCol: 'stars'}, axis='columns', inplace = True)
+        return X
 
-#Pipeline = Pipeline([FillPrice, CategoriesExpand, RatingNormalizer ])
+#Pipeline = Pipeline([FillPrice, CategoriesTransformScr, RatingNormalizer ])
 if (__name__ == "__main__"):
     print('it is ok')
