@@ -26,6 +26,23 @@ def build_restoraunts(zips):
             for row in data:
                 add_to_database_if_new(row, biz)
 
+def add_restoraunts(aliases):
+    """ collects restaurant by zip code through YELP API"""
+    for alias in aliases:
+
+        offsets = range(0,300,50)
+
+        for offset in offsets:
+            response = search(API_KEY, alias, DEFAULT_LOCATION, offset)
+            data = response.get('businesses', None)
+            if data is None:
+                break
+
+            for row in data:
+                add_to_database_if_new(row, biz)
+
+
+
 def build_review_by_API():
     """Collects reviews by API, collects users from those reviews"""
     for business in biz.find({'rev_API': { '$exists' : False } }):
