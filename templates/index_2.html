@@ -10,21 +10,26 @@
       import json
       def on_complete(req):
           if req.status==200 or req.status==0:
-              document["result"].html = req.text
+              data = json.loads(req.text)
+              document["result"].html = data['bad']
+              document["result2"].html = data['good']
+
           else:
               document["result"].html = "error " + req.text
+
       def get_prediction(ev):
           """Get the predicted probability."""
           req = ajax.ajax()
           req.bind('complete', on_complete)
           req.open('POST', '/predict', True)
           req.set_header('content-type','application/json')
-          data = json.dumps({'user_loc': document['user_loc'].value})
+          data = json.dumps({'user_loc': document['user_loc'].value, 'user_cl': document['user_clusters'].html})
           req.send(data)
 
       def show_cl(clu):
           if clu.status==200 or clu.status==0:
               document["user_clusters"].html = clu.text
+
           else:
               document["user_clusters"].html = "error " + req.text
 
@@ -45,10 +50,14 @@
   </script>
   <textarea id="user_rev"></textarea>
   <button id="cluster_button">Cluster !</button>
-  <div id="user_clusters">Your clusters: </div>
+  <div id="user_clusters" cl = '' >Your clusters: </div>
 
     <textarea id="user_loc"></textarea>
   <button id="predict_button">Predict!</button>
-  <div id="result">FfFFFFF!!!</div>
+  <div id="header_bad">This is very likely bad</div>
+  <div id="result">BAD!!!</div>
+  <div id="header_good">This is  likely norm</div>
+  <div id="result2">GOOD!!!</div>
+
   </body>
 </html>
