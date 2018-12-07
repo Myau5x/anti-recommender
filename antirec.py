@@ -21,9 +21,9 @@ rf = ComboModel('rforest/mrf_', th_rf35, colPred_pr, colClust_n)
 with open('model_feat.pkl', 'rb') as f:
     model_features = pickle.load(f)
 
-DEFAULT_USER = ['cl_t1',  'cl_t8', 'cl_t4']
-
-colShow = ['name', 'rating', 'location' , 'url']
+DEFAULT_USER = ['cl_t2',  'cl_t8', 'cl_t4']
+Real_user = []
+colShow = ['name', 'BAD', 'rating', 'location' , 'url']
 
 app = Flask(__name__, static_url_path="")
 
@@ -44,16 +44,26 @@ def predict():
     #prediction = model.predict_proba([data['user_input']])
     else:
         X = cleaning_data(rests, model_features)
-        prediction = rf.predict(X, DEFAULT_USER)
+        if len(Real_user) == 0:
+            prediction = rf.predict(X, DEFAULT_USER)
+        else:
+            prediction = rf.predict(X, Real_user)
+
         am_bad = int(prediction.sum())
         am_norm = int(len(prediction) - am_bad)
+        rests['url'] = rests['url'].str.split('?').map(lambda x : x[0])
+        rests['BAD'] = prediction
         #return jsonify({'bad restaurants': am_bad, 'norm restaurants': am_norm})
-        return rests[prediction][colShow].to_html()
+        return rests[colShow].to_html()
 
 @app.route('/clusters', methods=['GET', 'POST'])
 def clusters():
-    """Return a random prediction."""
+    """Have to cluster user by review, now just take cluster nums"""
     data = request.json
-
-
-    return jsonify({'cluster': DEFAULT_USER})
+    stroka = data['user_rev']
+    l = stroka.split(',')
+    user = []
+    for x in l:
+        user.append('cl_t'+str(int(x)))
+    Real_user = list(set(user))
+    return jsonify({'cluster': Real_user})
