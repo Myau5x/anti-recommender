@@ -1,6 +1,6 @@
 import pandas as pd
 import time
-from scraping.yelp_api import *
+from scraping.yelp_api import search, API_KEY, DEFAULT_TERM
 import pickle
 import numpy as np
 
@@ -18,7 +18,7 @@ def build_restoraunts(loc):
         response = search(API_KEY, DEFAULT_TERM, loc, offset)
         data = response.get('businesses', None)
         if data is None:
-            break
+            return None
         l+=data
     return pd.DataFrame(l)
 

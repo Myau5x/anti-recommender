@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import time
 from bs4 import BeautifulSoup
 import requests
-from starting_db import add_to_database_if_new
+from .starting_db import add_to_database_if_new
 
 mc = MongoClient()
 db  = mc['raw_restaurants']
@@ -47,7 +47,7 @@ def scrap_by_users(user_url):
                 rev['user_id'] = user_id
                 revs.append(rev)
 
-        for page in range(10, count_rev, 10):
+        for page in range(10, min(count_rev,50), 10):
             url_add = add_start+str(page)+'&userid='+user_id
             response = requests.get(url_add)
             if response.status_code == 200:
