@@ -45,7 +45,7 @@
       def get_clusters_by_yelp(ev):
           clu = ajax.ajax()
           clu.bind('complete', show_cl)
-          clu.open('POST', '/clusters', True)
+          clu.open('POST', '/clustering_yelp', True)
           clu.set_header('content-type','application/json')
           data = json.dumps({'user_yelp': document['user_yelp'].value})
           clu.send(data)
@@ -58,13 +58,14 @@
       document["cluster_yelp"].bind("click", get_clusters_by_yelp)
 
   </script>
+  <div> Give yelp user url: </div>
   <textarea id="user_yelp"></textarea>
   <button id="cluster_yelp">scrap your yelp!</button>
-
+  <div> You can give cluster nums if by any chance you already know them</div>
   <textarea id="user_rev"></textarea>
-  <button id="cluster_button">Cluster !</button>
+  <button id="cluster_button">Cluster </button>
   <div id="user_clusters" cl = '' >Your clusters: </div>
-
+  <div> Where you wanna eat?</div>
     <textarea id="user_loc"></textarea>
   <button id="predict_button">Predict!</button>
   <div id="header_bad">This is very likely bad</div>

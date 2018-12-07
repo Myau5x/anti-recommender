@@ -62,7 +62,7 @@ class ClusterReviews:
     """takes:
     X - list of reviews
     fitted models and idf-vector - returns cluster nums for reviews"""
-    def __init__(self,countvectorizer, idf, clustering):
+    def __init__(self, countvectorizer, idf, clustering):
         self.cv = countvectorizer
         self.idf = idf
         self.clustering = clustering

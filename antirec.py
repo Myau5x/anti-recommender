@@ -21,6 +21,15 @@ with open('model_parts/idf', 'rb') as f:
 
 ClustModel = ClusterReviews(cv, new_idf, km)
 
+def cl_renaming(cls, cols = colClust_n):
+    a = ''
+    cls = list(set(cls))
+    for x in cls:
+        name = 'cl_t'+str(x)
+        if name in colClust_n:
+            a+=name+' '
+    return a
+
 app = Flask(__name__, static_url_path="")
 
 colClust_n = ['cl_t0', 'cl_t1', 'cl_t2', 'cl_t3', 'cl_t4', 'cl_t5', 'cl_t7', 'cl_t8', 'cl_t9', 'cl_t10', 'cl_t11', 'cl_t12', 'cl_t13', 'cl_t14', 'cl_t16', 'cl_t17']
@@ -90,7 +99,8 @@ def clusters():
     l = stroka.split(',')
     user = []
     for x in l:
-        user.append('cl_t'+str(int(x)))
+        if ('cl_t'+str(int(x))) in colClust_n:
+            user.append('cl_t'+str(int(x)))
     Real_user = list(set(user))
     s = ''
     for cl in Real_user:
@@ -107,5 +117,5 @@ def clusters_from_yelp():
         return
     ###Here should be filtering, tokenize and clustering
     cl_med = ClustModel.transform(rs)
-
+    s = cl_renaming(cl_med)
     return s
