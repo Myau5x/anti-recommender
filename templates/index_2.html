@@ -42,12 +42,25 @@
           data = json.dumps({'user_rev': document['user_rev'].value})
           clu.send(data)
 
+      def get_clusters_by_yelp(ev):
+          clu = ajax.ajax()
+          clu.bind('complete', show_cl)
+          clu.open('POST', '/clusters', True)
+          clu.set_header('content-type','application/json')
+          data = json.dumps({'user_yelp': document['user_yelp'].value})
+          clu.send(data)
+
+
 
 
       document["predict_button"].bind("click", get_prediction)
       document["cluster_button"].bind("click", get_clusters)
+      document["cluster_yelp"].bind("click", get_clusters_by_yelp)
 
   </script>
+  <textarea id="user_yelp"></textarea>
+  <button id="cluster_yelp">scrap your yelp!</button>
+
   <textarea id="user_rev"></textarea>
   <button id="cluster_button">Cluster !</button>
   <div id="user_clusters" cl = '' >Your clusters: </div>

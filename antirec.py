@@ -8,6 +8,9 @@ from sklearn.pipeline import Pipeline
 from flask import Flask, request, render_template, jsonify
 from concept_proof import build_restoraunts, cleaning_data, ComboModel
 import pickle
+from scraping.add_by_scrap import scrap_by_users
+
+
 
 app = Flask(__name__, static_url_path="")
 
@@ -83,4 +86,13 @@ def clusters():
     s = ''
     for cl in Real_user:
         s += str(cl)+' '
+    return s
+
+@app.route('/clustering_yelp', methods=['GET', 'POST'])
+def clusters_from_yelp():
+    """Have to cluster user by review, now just take cluster nums"""
+    url = request.json['user_yelp']
+    rews = scrap_by_users(url)
+    ###Here should be filtering, tokenize and clustering 
+    s = 'cl_t0'
     return s
