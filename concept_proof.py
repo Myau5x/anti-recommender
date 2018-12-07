@@ -56,3 +56,24 @@ class ComboModel:
             Y[col] = self.clust_model[col].predict_proba(X[self.col_pred])[:,1]
             answer = answer|(Y[col]>self.model_thres[col])
         return answer
+
+class ClusterReviews:
+
+    """takes:
+    X - list of reviews
+    fitted models and idf-vector - returns cluster nums for reviews"""
+    def __init__(self,countvectorizer, idf, clustering):
+        self.cv = countvectorizer
+        self.idf = idf
+        self.clustering = clustering
+    def transform(self,X):
+        c = self.cv.transform(X)
+        i = c.toarray()*self.idf
+        cl = self.clustering.predict(i)
+        return cl
+
+def extract_bad_revs(rs):
+    r_df = pd.DataFrame(rs)
+    r_df['rating'] = r_df.rating.astype(float)
+    l = r_df[r_df.rating <=3]['text']
+    return l.tolist()

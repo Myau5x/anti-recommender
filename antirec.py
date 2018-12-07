@@ -4,13 +4,22 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
+from sklearn.cluster import KMeans
+from sklearn.feature_extraction.text import CountVectorizer
+import numpy as np
 
 from flask import Flask, request, render_template, jsonify
-from concept_proof import build_restoraunts, cleaning_data, ComboModel
-import pickle
+mport pickle
 from scraping.add_by_scrap import scrap_by_users
 
+with open('model_parts/cv.mdl','rb') as f:
+    cv = pickle.load(f)
+with open('model_parts/km.mdl','rb') as f:
+    km = pickle.load(f)
+with open('model_parts/idf', 'rb') as f:
+    new_idf =pickle.load( f)
 
+ClustModel = ClusterReviews(cv, new_idf, km)
 
 app = Flask(__name__, static_url_path="")
 
@@ -93,6 +102,10 @@ def clusters_from_yelp():
     """Have to cluster user by review, now just take cluster nums"""
     url = request.json['user_yelp']
     rews = scrap_by_users(url)
-    ###Here should be filtering, tokenize and clustering 
-    s = 'cl_t0'
+    rs = extract_bad_revs(rews)
+    if len(rs) == 0:
+        return
+    ###Here should be filtering, tokenize and clustering
+    cl_med = ClustModel.transform(rs)
+
     return s
