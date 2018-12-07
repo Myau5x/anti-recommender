@@ -7,9 +7,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
-
+from concept_proof import (build_restoraunts, cleaning_data, ComboModel,
+    ClusterReviews, extract_bad_revs)
 from flask import Flask, request, render_template, jsonify
-mport pickle
+import pickle
 from scraping.add_by_scrap import scrap_by_users
 
 with open('model_parts/cv.mdl','rb') as f:
@@ -18,6 +19,8 @@ with open('model_parts/km.mdl','rb') as f:
     km = pickle.load(f)
 with open('model_parts/idf', 'rb') as f:
     new_idf =pickle.load( f)
+    
+colClust_n = ['cl_t0', 'cl_t1', 'cl_t2', 'cl_t3', 'cl_t4', 'cl_t5', 'cl_t7', 'cl_t8', 'cl_t9', 'cl_t10', 'cl_t11', 'cl_t12', 'cl_t13', 'cl_t14', 'cl_t16', 'cl_t17']
 
 ClustModel = ClusterReviews(cv, new_idf, km)
 
@@ -32,7 +35,6 @@ def cl_renaming(cls, cols = colClust_n):
 
 app = Flask(__name__, static_url_path="")
 
-colClust_n = ['cl_t0', 'cl_t1', 'cl_t2', 'cl_t3', 'cl_t4', 'cl_t5', 'cl_t7', 'cl_t8', 'cl_t9', 'cl_t10', 'cl_t11', 'cl_t12', 'cl_t13', 'cl_t14', 'cl_t16', 'cl_t17']
 with open('colPred213', 'rb') as f:
     colPred_pr = pickle.load(f)
 with open('thres_35_rf','rb') as f:
