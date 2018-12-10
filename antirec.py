@@ -53,7 +53,7 @@ with open('model_feat.pkl', 'rb') as f:
 
 DEFAULT_USER = ['cl_t1',  'cl_t8', 'cl_t3']
 Real_user = []
-colShow = ['name', 'BAD', 'rating', 'location' , 'url']
+colShow = ['name', 'BAD', 'rating', 'location' , 'url', 'image_url']
 
 app = Flask(__name__, static_url_path="")
 
@@ -87,6 +87,7 @@ def predict():
         rests['url'] = rests['url'].str.split('?').map(lambda x : x[0])
         rests['BAD'] = prediction
         rests['url'] = rests['url'].map(rewrite)
+        rests['image_url'] = rests['image_url'].apply(lambda x: '<img src="{}" alt="" height="30" width = "30">'.format(x))
         bad = rests[prediction][colShow]
         good = rests[~prediction][colShow]
         return jsonify({"bad":bad.to_html(escape=False), "good":good.to_html(escape=False)})
