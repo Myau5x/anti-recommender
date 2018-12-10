@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<title>Predict</title>
+		<script type="text/javascript" src="brython.js"></script>
+		<script type="text/javascript" src="brython_stdlib.js"></script>
+	</head>
+	<body onload="brython(1)">
+		<script type="text/python3">
+      from browser import document, ajax
+      import json
+      def on_complete(req):
+          if req.status==200 or req.status==0:
+              document["result"].html = req.text
+          else:
+              document["result"].html = "error " + req.text
+      def get_prediction(ev):
+          """Get the predicted probability."""
+          req = ajax.ajax()
+          req.bind('complete', on_complete)
+          req.open('POST', '/predict', True)
+          req.set_header('content-type','application/json')
+          data = json.dumps({'user_loc': document['user_loc'].value})
+          req.send(data)
+
+
+
+
+
+      document["predict_button"].bind("click", get_prediction)
+
+		</script>
+		<textarea id="user_rev"></textarea>
+		<button id="cluster_button">Cluster !</button>
+		<div id="user_clusters">Your clusters: </div>
+
+    <textarea id="user_loc"></textarea>
+		<button id="predict_button">Predict!</button>
+		<div id = 'place_for_bad'>BAD</div>
+		<div id="result">FfFFFFF!!!</div>
+		<div id = 'place_for_good'>GOOD</div>
+		<div id="result2">FfFFFFF!!!</div>
+
+	</body>
+</html>

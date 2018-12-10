@@ -26,7 +26,7 @@ SEARCH_LIMIT = 50
 DEFAULT_TERM = 'restaurant'
 DEFAULT_LOCATION = 'Seattle, WA'
 
-def request(host, path, api_key, url_params=None):
+def y_request(host, path, api_key, url_params=None):
     """Given your API_KEY, send a GET request to the API.
     Args:
         host (str): The domain host of the API.
@@ -65,7 +65,7 @@ def search(api_key, term, location, offset = 0):
         'limit': SEARCH_LIMIT,
         'offset': offset
     }
-    return request(API_HOST, SEARCH_PATH, api_key, url_params=url_params)
+    return y_request(API_HOST, SEARCH_PATH, api_key, url_params=url_params)
 
 def get_reviews(api_key, business_id):
     """Query the Business API by a business ID.
@@ -76,4 +76,4 @@ def get_reviews(api_key, business_id):
     """
     business_path = BUSINESS_PATH + business_id +'/reviews'
 
-    return request(API_HOST, business_path, api_key)
+    return y_request(API_HOST, business_path, api_key)

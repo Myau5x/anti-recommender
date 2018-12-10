@@ -1,0 +1,15 @@
+def on_complete2(clu):
+    if clu.status==200 or clu.status==0:
+        document["clusters"].html = clu.text
+    else:
+        document["clusters"].html = "error " + clu.text
+def get_user_cl(ev):
+    """Get the predicted probability."""
+    clu = ajax.ajax()
+    clu.bind('complete', on_complete2)
+    clu.open('POST', '/cluster', True)
+    clu.set_header('content-type','application/json')
+    data = json.dumps({'user_rev': document['user_rev'].value})
+    clu.send(data)
+
+    document["cluster_button"].bind("click", get_user_cl)

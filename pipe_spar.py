@@ -49,6 +49,7 @@ def cluster_biz_by_review(data_review, model):
     data = data.dropDuplicates()
     return data
 
+
 ### Testing
 
 #rev_pred = pipe_count.transform(train2_vect)

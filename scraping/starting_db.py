@@ -1,7 +1,7 @@
 import pandas as pd
 from pymongo import MongoClient
 import time
-from yelp_api import *
+from .yelp_api import get_reviews, search, API_KEY, DEFAULT_TERM
 
 mc = MongoClient()
 db  = mc['raw_restaurants']

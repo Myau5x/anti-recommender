@@ -1,0 +1,77 @@
+<html>
+  <head>
+  <title>Predict</title>
+  <script type="text/javascript" src="brython.js"></script>
+  <script type="text/javascript" src="brython_stdlib.js"></script>
+  </head>
+  <body onload="brython(1)">
+  <script type="text/python3">
+      from browser import document, ajax
+      import json
+      def on_complete(req):
+          if req.status==200 or req.status==0:
+              data = json.loads(req.text)
+              document["result"].html = data['bad']
+              document["result2"].html = data['good']
+
+          else:
+              document["result"].html = "error " + req.text
+
+      def get_prediction(ev):
+          """Get the predicted probability."""
+          req = ajax.ajax()
+          req.bind('complete', on_complete)
+          req.open('POST', '/predict', True)
+          req.set_header('content-type','application/json')
+          data = json.dumps({'user_loc': document['user_loc'].value, 'user_cl': document['user_clusters'].html})
+          req.send(data)
+
+      def show_cl(clu):
+          if clu.status==200 or clu.status==0:
+              document["user_clusters"].html = clu.text
+
+          else:
+              document["user_clusters"].html = "error " + req.text
+
+
+      def get_clusters(ev):
+          clu = ajax.ajax()
+          clu.bind('complete', show_cl)
+          clu.open('POST', '/clusters', True)
+          clu.set_header('content-type','application/json')
+          data = json.dumps({'user_rev': document['user_rev'].value})
+          clu.send(data)
+
+      def get_clusters_by_yelp(ev):
+          clu = ajax.ajax()
+          clu.bind('complete', show_cl)
+          clu.open('POST', '/clustering_yelp', True)
+          clu.set_header('content-type','application/json')
+          data = json.dumps({'user_yelp': document['user_yelp'].value})
+          clu.send(data)
+
+
+
+
+      document["predict_button"].bind("click", get_prediction)
+      document["cluster_button"].bind("click", get_clusters)
+      document["cluster_yelp"].bind("click", get_clusters_by_yelp)
+
+  </script>
+  <div> Give yelp user url: </div>
+  <textarea id="user_yelp"></textarea>
+  <button id="cluster_yelp">scrap your yelp!</button>
+  <div> You can give cluster nums if by any chance you already know them</div>
+  <textarea id="user_rev"></textarea>
+  <button id="cluster_button">Cluster </button>
+  <div id="user_clusters" cl = '' >Your clusters: </div>
+  <div> Where you wanna eat?</div>
+    <textarea id="user_loc"></textarea>
+  <button id="predict_button">Predict!</button>
+  <div id="header_bad">This is very likely bad</div>
+  <div id="result">BAD!!!</div>
+  <div id="header_good">This is  likely norm</div>
+  <div id="result2">GOOD!!!</div>
+
+  </body>
+</html>
