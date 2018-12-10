@@ -13,15 +13,19 @@ from flask import Flask, request, render_template, jsonify
 import pickle
 from scraping.add_by_scrap import scrap_by_users
 
+def rewrite(url):
+    s  = '<a href="'+url +'">click</a>'
+    return s
+
 with open('model_parts/cv.mdl','rb') as f:
     cv = pickle.load(f)
 with open('model_parts/km.mdl','rb') as f:
     km = pickle.load(f)
 with open('model_parts/idf', 'rb') as f:
     new_idf =pickle.load( f)
-    
-colClust_n = ['cl_t0', 'cl_t1', 'cl_t2', 'cl_t3', 'cl_t4', 'cl_t5', 'cl_t7', 'cl_t8', 'cl_t9', 'cl_t10', 'cl_t11', 'cl_t12', 'cl_t13', 'cl_t14', 'cl_t16', 'cl_t17']
 
+colClust_n = ['cl_t0', 'cl_t1', 'cl_t2', 'cl_t3', 'cl_t4', 'cl_t5', 'cl_t7', 'cl_t8', 'cl_t9', 'cl_t10', 'cl_t11', 'cl_t12', 'cl_t13', 'cl_t14', 'cl_t16', 'cl_t17']
+pd.set_option('display.max_colwidth', -1)
 ClustModel = ClusterReviews(cv, new_idf, km)
 
 def cl_renaming(cls, cols = colClust_n):
@@ -82,9 +86,10 @@ def predict():
         am_norm = int(len(prediction) - am_bad)
         rests['url'] = rests['url'].str.split('?').map(lambda x : x[0])
         rests['BAD'] = prediction
+        rests['url'] = rests['url'].map(rewrite)
         bad = rests[prediction][colShow]
         good = rests[~prediction][colShow]
-        return jsonify({"bad":bad.to_html(), "good":good.to_html()})
+        return jsonify({"bad":bad.to_html(escape=False), "good":good.to_html(escape=False)})
         #return jsonify({'bad restaurants': am_bad, 'norm restaurants': am_norm})
 
     #return jsonify({'cluster': real_user})
