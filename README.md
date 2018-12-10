@@ -9,7 +9,75 @@ minimum result: create model that perform better than just predict all that wors
 
 ## data
 
-For training models I used Yelp Academic Dataset available here : 
+For training models I used Yelp Academic Dataset available here : https://www.yelp.com/dataset
+
+For validation I used data scraped from yelp. 
+Folder Scraping
+First download data through yelp api for (king county zip codes)
+files: 
+Then with BeautifulSoup I scraped user reviews for about 100 users 
+files:
+example how to do that in jupiter notebook
+
+## Data preparation / modeling
+
+### Finding hidden bad features using reviews
+
+Filter reviews that is for restaurants
+
+filter bad reviews
+
+Split on test train
+
+Using pyspark for this
+
+Countvectorizing +  IDF + Kmeans
+
+Than using clusters on review I assign cluster to restaurants, and to users on train set (every user/ restaurant can have several reviews)
+
+If user dont like particular feature and restaurant have it I predict that it bad restaurant (User rate 1 or 2)
+
+Check that for pair user/restaurants unseen in train test predicting bad rating works better
+
+Save Kmeans cluster centroids, idf vector and countvectorising Vocabulary
+
+Save to csv basic restaurants info and predicted cluster `biz_cluster.csv`
+
+### Predicting clusters using basic info about restauurants
+
+Split biz_cluster.csv on train and test set
+
+Drop features that Yelp dotsn't give through API
+Create new feature rating/(number of reviews)
+
+Train 16 Random forests and GradientBoosting Regressors for every clusters to predict if particular restaurant can be assigned to this cluster
+
+Test it on test set
+
+## Validation on scraped data
+
+Create sklearn model working same as pyspark model using saved cluster centroids, idf vector and countvectorising Vocabulary
+(https://github.com/Myau5x/anti-recommender/tree/master/model_parts)
+
+using this model assign cluster to user based on their reviews
+
+Assign clusters to restaurants using Random Forest (GradientBoostClassifier)
+
+Predict If user rate restaurant as bad
+
+
+## Web site
+
+On this moment web site works locally
+
+User can give link to his profile on url, I scrape it, cluster user according his bad reviews
+Than user can input location, I call Yelp API, take first 100 restaurants for this location and predict f it bad for user or not.
+
+
+
+
+
+
 
 
 
