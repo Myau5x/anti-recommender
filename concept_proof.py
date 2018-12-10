@@ -77,3 +77,6 @@ def extract_bad_revs(rs):
     r_df['rating'] = r_df.rating.astype(float)
     l = r_df[r_df.rating <3]['text']
     return l.tolist()
+
+def pretty_address(adr):
+    return ''.join(adr['display_address'])

@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 from concept_proof import (build_restoraunts, cleaning_data, ComboModel,
-    ClusterReviews, extract_bad_revs)
+    ClusterReviews, extract_bad_revs, pretty_address)
 from flask import Flask, request, render_template, jsonify
 import pickle
 from scraping.add_by_scrap import scrap_by_users
@@ -88,6 +88,7 @@ def predict():
         rests['BAD'] = prediction
         rests['url'] = rests['url'].map(rewrite)
         rests['image_url'] = rests['image_url'].apply(lambda x: '<img src="{}" alt="" height="30" width = "30">'.format(x))
+        rests['location'] = rests['location'].map(pretty_address)
         bad = rests[prediction][colShow]
         good = rests[~prediction][colShow]
         return jsonify({"bad":bad.to_html(escape=False), "good":good.to_html(escape=False)})
