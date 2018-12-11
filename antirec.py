@@ -87,7 +87,7 @@ def predict():
         rests['image_url'] = rests['image_url'].apply(lambda x: '<img src="{}" alt="" height="30" width = "30">'.format(x))
         rests['location'] = rests['location'].map(pretty_address)
         bad = rests[prediction][colShow].sort_values(by = 'rating', ascending=False)
-        good = rests[~prediction][colShow].sort_values(by = 'rating', ascending=False)
+        good = rests[~prediction][colShow].sort_values(by = 'rating', ascending=True)
         return jsonify({"bad":bad.to_html(escape=False), "good":good.to_html(escape=False)})
         #return jsonify({'bad restaurants': am_bad, 'norm restaurants': am_norm})
 
