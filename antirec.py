@@ -1,13 +1,10 @@
-import random
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import Pipeline
 
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
-from concept_proof import (build_restoraunts, cleaning_data, ComboModel,
+from src.concept_proof import (build_restoraunts, cleaning_data, ComboModel,
     ClusterReviews, extract_bad_revs, pretty_address)
 from flask import Flask, request, render_template, jsonify
 import pickle
@@ -39,9 +36,9 @@ def cl_renaming(cls, cols = colClust_n):
 
 app = Flask(__name__, static_url_path="")
 
-with open('colPred213', 'rb') as f:
+with open('model_parts/colPred213', 'rb') as f:
     colPred_pr = pickle.load(f)
-with open('thres_35_rf','rb') as f:
+with open('model_parts/thres_35_rf','rb') as f:
     th_rf35 = pickle.load(f )
 ### for banned me
 with open('offline.d', 'rb') as f:

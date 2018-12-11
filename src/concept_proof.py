@@ -4,7 +4,7 @@ from scraping.yelp_api import search, API_KEY, DEFAULT_TERM
 import pickle
 import numpy as np
 
-from trans_rat import FillPrice, CategoriesTransformScr, RatingNormalizer, FillPriceScr
+from .trans_rat import FillPrice, CategoriesTransformScr, RatingNormalizer, FillPriceScr
 
 ### looking just on first 100
 offset_lim = 100
