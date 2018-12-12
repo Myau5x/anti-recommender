@@ -31,7 +31,11 @@ Split on test train
 
 Using pyspark for this
 
-Countvectorizing +  IDF + Kmeans
+Try ALS model for predicting rating but it predicts worse than mean rating. (jupiter notebooks and other sourse are in ALS folder)
+
+Countvectorizing +  IDF  reviews
+
+Using Kmeans for clustering
 
 Than using clusters on review I assign cluster to restaurants, and to users on train set (every user/ restaurant can have several reviews)
 
@@ -40,6 +44,8 @@ If user dont like particular feature and restaurant have it I predict that it ba
 Check that for pair user/restaurants unseen in train test predicting bad rating works better
 
 Save Kmeans cluster centroids, idf vector and countvectorising Vocabulary
+
+Code for this: `nlp_model.py` and `NLP_tuning.ipynb` 
 
 Save to csv basic restaurants info and predicted cluster `biz_cluster.csv`
 
@@ -63,7 +69,7 @@ using this model assign cluster to user based on their reviews
 
 Assign clusters to restaurants using Random Forest (GradientBoostClassifier)
 
-Predict If user rate restaurant as bad
+Predict if user rate restaurant as bad
 
 
 ## Web site
@@ -71,7 +77,12 @@ Predict If user rate restaurant as bad
 On this moment web site works locally
 
 User can give link to his profile on url, I scrape it, cluster user according his bad reviews
-Than user can input location, I call Yelp API, take first 100 restaurants for this location and predict f it bad for user or not.
+Than user can input location, I call Yelp API, take first 100 restaurants for this location and predict if it bad for user or not.
+
+For easy using with Flask instead of trained pyspark model I created sklearn model working same way. Look on code here `rewrite_model_as_sklearn.ipynb` 
+Web app works using Flask and Brython 
+source code for this: `antirec.py` and `templates\index_2.html` Also `static\` need to Brython.
+
 
 
 
