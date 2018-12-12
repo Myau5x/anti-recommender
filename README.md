@@ -48,10 +48,11 @@ Save Kmeans cluster centroids, idf vector and countvectorising Vocabulary
 Code for this: `nlp_model.py` and `NLP_tuning.ipynb` 
 
 Save to csv basic restaurants info and predicted cluster `biz_cluster.csv`
+Code for creating this file `save_biz.py`
 
 ### Predicting clusters using basic info about restauurants
 
-Split biz_cluster.csv on train and test set
+Split `biz_cluster.csv` on train and test set
 
 Drop features that Yelp dotsn't give through API
 Create new feature rating/(number of reviews)
@@ -70,7 +71,7 @@ using this model assign cluster to user based on their reviews
 Assign clusters to restaurants using Random Forest (GradientBoostClassifier)
 
 Predict if user rate restaurant as bad
-
+Code for this in notebook `testing_on_scrap`
 
 ## Web site
 
