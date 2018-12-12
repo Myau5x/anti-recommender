@@ -12,12 +12,15 @@ minimum result: create model that perform better than just predict all that wors
 For training models I used Yelp Academic Dataset available here : https://www.yelp.com/dataset
 
 For validation I used data scraped from yelp. 
-Folder Scraping
+Folder `Scraping` contains code for web scraping and working with YELP API
+
 First download data through yelp api for (king county zip codes)
-files: 
+files.
+
 Then with BeautifulSoup I scraped user reviews for about 100 users 
-files:
-example how to do that in jupiter notebook
+files. Folder `data` contains examples of scraped data.
+
+example how to do that in jupiter notebook `king_county_food.ipynb`
 
 ## Data preparation / modeling
 
