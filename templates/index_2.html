@@ -31,7 +31,7 @@
               document["user_clusters"].html = clu.text
 
           else:
-              document["user_clusters"].html = "error " + req.text
+              document["user_clusters"].html = "error " + clu.text
 
 
       def get_clusters(ev):
@@ -58,6 +58,9 @@
       document["cluster_yelp"].bind("click", get_clusters_by_yelp)
 
   </script>
+  <div ALIGN=RIGHT style="font-size:18pt"> RESTAURANTS ANTI-RECOMMENDER</div>
+  <div ALIGN=RIGHT style="font-size:18pt"> <i>by Olga Illarionova</i></div>
+
   <div style="font-size:16pt"> Give yelp user url: </div>
   <textarea id="user_yelp" style="font-size:16pt"></textarea>
   <button id="cluster_yelp" style="font-size:16pt">scrape your yelp!</button>
