@@ -87,6 +87,9 @@ For easy using with Flask instead of trained pyspark model I created sklearn mod
 Web app works using Flask and Brython 
 source code for this: `antirec.py` and `templates\index_2.html` Also `static\` need to Brython.
 
+## Presentation
+Presentation slides `Where not go to have lunch.pdf`
+
 
 
 
