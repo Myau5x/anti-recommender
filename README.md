@@ -80,8 +80,12 @@ Code for this in notebook `testing_on_scrap`
 
 On this moment web site works locally
 
-User can give link to his profile on url, I scrape it, cluster user according his bad reviews
-Than user can input location, I call Yelp API, take first 100 restaurants for this location and predict if it bad for user or not.
+ - User can give link to his profile on url 
+ - My tool scrapes it
+ - Clusters user according his bad reviews
+ - Than user provide location
+ - Tool calls Yelp API and takes first 100 restaurants for this location 
+ - Predicts if those restaurants bad for user or not.
 
 For easy using with Flask instead of trained pyspark model I created sklearn model working same way. Look on code here `rewrite_model_as_sklearn.ipynb` 
 Web app works using Flask and Brython 
